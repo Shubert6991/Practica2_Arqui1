@@ -42,11 +42,10 @@ byte interrogacion[8] = {
   0b00011000,
   0b00010010,
   0b00001100,
-}
+};
 
 LiquidCrystal lcd(RS, E, D4, D5, D6, D7);
 
-lcd.createChar(0,interrogacion);
 Servo servo;
 
 int pinFacilota = 35;
@@ -55,6 +54,7 @@ unsigned long minuto = 60000;
 
 void setup() {
   //Servo
+  lcd.createChar(0,interrogacion);
   servo.attach(40);
   servo.write(0);
   //Inicio configuraciones sensor RGB
@@ -166,7 +166,7 @@ void imprimirMensaje0(){
 void imprimirMensaje1(){
   lcd.setCursor(0,0);
   lcd.print("G11-TOTAL PRODUCTOS -");
-  lcd.setCursor(21,0);
+  lcd.setCursor(22,0);
   lcd.print(numproductos);
   lcd.scrollDisplayLeft();
   lcd.setCursor ( 7, 1);
@@ -178,9 +178,9 @@ void imprimirMensaje2(){
   lcd.write((byte)0);
   lcd.setCursor(1,0);
   lcd.print(":G11-Recipiente 1 -");
-  lcd.setCursor(21,0);
+  lcd.setCursor(22,0);
   lcd.print(productos1);
-  lcd.setCursor(23,0);
+  lcd.setCursor(24,0);
   lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
   lcd.setCursor ( 4, 1);
@@ -194,9 +194,9 @@ void imprimirMensaje3(){
   lcd.write((byte)0);
   lcd.setCursor(1,0);
   lcd.print(":G11-Recipiente 2 -");
-  lcd.setCursor(21,0);
+  lcd.setCursor(22,0);
   lcd.print(productos2);
-  lcd.setCursor(23,0);
+  lcd.setCursor(24,0);
   lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
   lcd.setCursor ( 4, 1);
@@ -210,9 +210,9 @@ void imprimirMensaje4(){
   lcd.write((byte)0);
   lcd.setCursor(1,0);
   lcd.print(":G11-Recipiente 3 -");
-  lcd.setCursor(21,0);
+  lcd.setCursor(22,0);
   lcd.print(productos1);
-  lcd.setCursor(23,0);
+  lcd.setCursor(24,0);
   lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
   lcd.setCursor ( 4, 1);
