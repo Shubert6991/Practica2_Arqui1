@@ -65,67 +65,95 @@ void setup() {
 
   //inicializacion LCD
   lcd.begin(16, 2);
-  lcd.setCursor ( 0, 0);
-  lcd.print("!G11-SECCION-A!");
-  lcd.setCursor ( 0, 1);
-  lcd.print("PRACTICA2");
+//  lcd.setCursor ( 0, 0);
+//  lcd.print("!G11-SECCION-A!");
+//  lcd.setCursor ( 0, 1);
+//  lcd.print("PRACTICA2");
   //delay(60000);
   //lcd.clear();
 }
 
 //VARIABLES MENSAJES
-int numproductos = 0;
 int mensaje  = 0;
+int numproductos = 0;
 int productos1 = 0;
 int productos2 = 0;
 int productos3 = 0;
 int estadoMensaje = 0;
+boolean encendido = false;
+int pinS = 0;
+unsigned long currentTime = 0;
 void loop() {
   //get current time
-  unsigned long currentTime = millis();
+  currentTime = millis();
   color();  
   distancia();
   moverMotores();
-  //Serial.println("");
-  if(currentTime - previousTime >= minuto){
-    //cambiar mensaje
-    mensaje++;
-    if(mensaje > 4){
-      mensaje = 1;
-    }
-    lcd.clear();
-    actualizarMensaje();
-    previousTime = currentTime;
-  }
-  //delay(30000);
-  Serial.println("switch");
-  Serial.println(digitalRead(pinFacilota));
+  pinS = digitalRead(pinFacilota);
   delay(1);
+  Serial.println("switch");
+  Serial.println(pinS);
+  actualizarMensaje();
 }
 
 void actualizarMensaje(){
-  if(mensaje == 1){
+  if(estadoMensaje == 0){
+    imprimirMensaje0();
+    if(pinS == 1){
+      //se enciende la banda
+      estadoMensaje = 1;
+      lcd.clear();
+    }
+  }
+  if(estadoMensaje == 1){
     imprimirMensaje1();
+    if(pinS == 0){
+      //se apaga la banda
+      if(currentTime - previousTime >= minuto){
+        estadoMensaje = 2;
+        previousTime = currentTime;
+        lcd.clear();
+      }
+    } else {
+      previousTime = millis();
+    }
   }
-  if(mensaje == 2){
+  if(estadoMensaje == 2){
     imprimirMensaje2();
+    if(currentTime - previousTime >= minuto){
+      previousTime = currentTime;
+      estadoMensaje = 3;
+      lcd.clear();
+    }
   }
-  if(mensaje == 3){
+  if(estadoMensaje == 3){
     imprimirMensaje3();
+    if(currentTime - previousTime >= minuto){
+      previousTime = currentTime;
+      estadoMensaje = 4;
+      lcd.clear();
+    }
   }
-  if(mensaje == 4){
+  if(estadoMensaje == 4){
     imprimirMensaje4();
+    if(currentTime - previousTime >= minuto){
+      previousTime = currentTime;
+      estadoMensaje = 0;
+      lcd.clear();
+    }
   }
 }
 
 void imprimirMensaje0(){
-  
+  lcd.setCursor ( 0, 0);
+  lcd.print("!G11-SECCION-A!-PRACTICA2");
+  lcd.scrollDisplayLeft();
 }
 
 void imprimirMensaje1(){
   lcd.setCursor(0,0);
-  lcd.print("G11-TOTAL PRODUCTOS-");
-  lcd.setCursor(22,0);
+  lcd.print("G11-TOTAL PRODUCTOS -");
+  lcd.setCursor(21,0);
   lcd.print(numproductos);
   lcd.scrollDisplayLeft();
   lcd.setCursor ( 7, 1);
@@ -134,32 +162,44 @@ void imprimirMensaje1(){
 
 void imprimirMensaje2(){
   lcd.setCursor(0,0);
-  lcd.print("G11-Recipiente 1-");
-  lcd.setCursor(22,0);
+  lcd.print("¿:G11-Recipiente 1 -");
+  lcd.setCursor(21,0);
   lcd.print(productos1);
+  lcd.setCursor(23,0);
+  lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
+  lcd.setCursor ( 4, 1);
+  lcd.print((currentTime - previousTime)/1000);
   lcd.setCursor ( 7, 1);
-  lcd.print(":)");
+  lcd.print("seg");
 }
 
 void imprimirMensaje3(){
   lcd.setCursor(0,0);
-  lcd.print("G11-Recipiente 2-");
-  lcd.setCursor(22,0);
+  lcd.print("¿:G11-Recipiente 2 -");
+  lcd.setCursor(21,0);
   lcd.print(productos2);
+  lcd.setCursor(23,0);
+  lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
+  lcd.setCursor ( 4, 1);
+  lcd.print((currentTime - previousTime)/1000);
   lcd.setCursor ( 7, 1);
-  lcd.print(":)");
+  lcd.print("seg");
 }
 
 void imprimirMensaje4(){
   lcd.setCursor(0,0);
-  lcd.print("G11-Recipiente 3-");
-  lcd.setCursor(22,0);
-  lcd.print(productos3);
+  lcd.print("¿:G11-Recipiente 3 -");
+  lcd.setCursor(21,0);
+  lcd.print(productos1);
+  lcd.setCursor(23,0);
+  lcd.print("Productos $&");
   lcd.scrollDisplayLeft();
+  lcd.setCursor ( 4, 1);
+  lcd.print((currentTime - previousTime)/1000);
   lcd.setCursor ( 7, 1);
-  lcd.print(":)");
+  lcd.print("seg");
 }
 
 void color(){
