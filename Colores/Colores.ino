@@ -36,8 +36,10 @@ LiquidCrystal lcd(RS, E, D4, D5, D6, D7);
 
 Servo servo;
 
+int pinFacilota = 35;
 unsigned long previousTime = 0;
 unsigned long minuto = 60000;
+
 void setup() {
   //Servo
   servo.attach(40);
@@ -48,6 +50,7 @@ void setup() {
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
   pinMode(sensorOut, INPUT);
+  pinMode(pinFacilota,INPUT);
   
   digitalWrite(S0, HIGH);
   digitalWrite(S1, LOW);
@@ -76,13 +79,14 @@ int mensaje  = 0;
 int productos1 = 0;
 int productos2 = 0;
 int productos3 = 0;
+int estadoMensaje = 0;
 void loop() {
   //get current time
   unsigned long currentTime = millis();
   color();  
   distancia();
   moverMotores();
-  Serial.println("");
+  //Serial.println("");
   if(currentTime - previousTime >= minuto){
     //cambiar mensaje
     mensaje++;
@@ -94,7 +98,9 @@ void loop() {
     previousTime = currentTime;
   }
   //delay(30000);
-  
+  Serial.println("switch");
+  Serial.println(digitalRead(pinFacilota));
+  delay(1);
 }
 
 void actualizarMensaje(){
@@ -111,6 +117,11 @@ void actualizarMensaje(){
     imprimirMensaje4();
   }
 }
+
+void imprimirMensaje0(){
+  
+}
+
 void imprimirMensaje1(){
   lcd.setCursor(0,0);
   lcd.print("G11-TOTAL PRODUCTOS-");
@@ -166,14 +177,14 @@ void color(){
 
   if (red < blue && red < green && green > blue)
   {  
-   Serial.println("Es color rojo"); 
+   //Serial.println("Es color rojo"); 
    colorCaja = 1;
   } else if (blue < red && blue < green)   
   {  
-   Serial.println("Es color azul");
+   //Serial.println("Es color azul");
    colorCaja = 2;
   } else if(red< green && red < blue && green < blue)  {
-    Serial.println("Es color amarillo");
+    //Serial.println("Es color amarillo");
     colorCaja = 3;
   }
 }
@@ -187,27 +198,27 @@ void distancia(){
 
   float tiempo = pulseIn(echo, HIGH);
   float d = (tiempo/2)/29.1;
-  Serial.print(d);
-  Serial.println(" cm");
+  //Serial.print(d);
+  //Serial.println(" cm");
   
   if(d > 10.5){
-    Serial.println("No hay nada en la banda papi");
-    Serial.println(d); 
+    //Serial.println("No hay nada en la banda papi");
+    //Serial.println(d); 
     sizeCaja = 0; 
     colorCaja=0;
     contado = false;
   } else if( d< 10.5 && d>7.5 && !contado){
-    Serial.println("Caja pequeña");
+    //Serial.println("Caja pequeña");
     numproductos++;
     sizeCaja = 1;
     contado = true;
   } else if( d< 7.5 && d>4.5 && !contado){
-    Serial.println("Caja mediana");
+    //Serial.println("Caja mediana");
     numproductos++;
     sizeCaja = 2;
     contado = true;
   }else if( d > 0 && d< 4.5 && !contado){
-    Serial.println("Caja grande");
+    //Serial.println("Caja grande");
     sizeCaja = 3;
     numproductos++;
     contado = true;
@@ -218,12 +229,12 @@ void distancia(){
 void moverMotores(){
   switch(sizeCaja){
     case 0://NO HAY NADA EN LA BANDA
-      Serial.println("No mover el motor");
+      //Serial.println("No mover el motor");
       break;
     case 1:// CAJA PEQUEÑA
       switch(colorCaja){
         case 0:
-          Serial.println("No mover el motor");
+          //Serial.println("No mover el motor");
           break;
         case 1://pequeño rojo recipiente 2
           productos2++;
@@ -242,7 +253,7 @@ void moverMotores(){
     case 2:// CAJA MEDIANA
       switch(colorCaja){
         case 0:
-          Serial.println("No mover el motor");
+          //Serial.println("No mover el motor");
           break;
         case 1://mediano rojo recipiente 1
           productos1++;
@@ -261,7 +272,7 @@ void moverMotores(){
     case 3: // CAJA GRANDE
       switch(colorCaja){
         case 0:
-          Serial.println("No mover el motor");
+          //Serial.println("No mover el motor");
           break;
         case 1://grande rojo recipiente 3
           productos3++;
@@ -281,18 +292,18 @@ void moverMotores(){
 }
 
 void moverMotorIzquierda(){//Recipiente 1
-  Serial.println("Mover motor al recipiente 1");
+  //Serial.println("Mover motor al recipiente 1");
   servo.write(60);
   delay(1000);
   servo.write(0);
 }
 
 void moverMotorCentro(){//Recipiente 2
-  Serial.println("Mover motor al recipiente 2");
+  //Serial.println("Mover motor al recipiente 2");
 }
 
 void moverMotorDerecha(){//Recipiente 3
-  Serial.println("Mover motor al recipiente 3");
+  //Serial.println("Mover motor al recipiente 3");
   servo.write(130);
   delay(1000);
   servo.write(0);
