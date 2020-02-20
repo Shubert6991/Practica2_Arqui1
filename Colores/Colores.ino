@@ -32,8 +32,21 @@ int D5 = 24;
 int D6 = 26;
 int D7 = 28;
 
+//Caracter ¿
+byte interrogacion[8] = {
+  0b00000110,
+  0b00000110,
+  0b00000000,
+  0b00000110,
+  0b00001100,
+  0b00011000,
+  0b00010010,
+  0b00001100,
+}
+
 LiquidCrystal lcd(RS, E, D4, D5, D6, D7);
 
+lcd.createChar(0,interrogacion);
 Servo servo;
 
 int pinFacilota = 35;
@@ -162,7 +175,9 @@ void imprimirMensaje1(){
 
 void imprimirMensaje2(){
   lcd.setCursor(0,0);
-  lcd.print("¿:G11-Recipiente 1 -");
+  lcd.write((byte)0);
+  lcd.setCursor(1,0);
+  lcd.print(":G11-Recipiente 1 -");
   lcd.setCursor(21,0);
   lcd.print(productos1);
   lcd.setCursor(23,0);
@@ -176,7 +191,9 @@ void imprimirMensaje2(){
 
 void imprimirMensaje3(){
   lcd.setCursor(0,0);
-  lcd.print("¿:G11-Recipiente 2 -");
+  lcd.write((byte)0);
+  lcd.setCursor(1,0);
+  lcd.print(":G11-Recipiente 2 -");
   lcd.setCursor(21,0);
   lcd.print(productos2);
   lcd.setCursor(23,0);
@@ -190,7 +207,9 @@ void imprimirMensaje3(){
 
 void imprimirMensaje4(){
   lcd.setCursor(0,0);
-  lcd.print("¿:G11-Recipiente 3 -");
+  lcd.write((byte)0);
+  lcd.setCursor(1,0);
+  lcd.print(":G11-Recipiente 3 -");
   lcd.setCursor(21,0);
   lcd.print(productos1);
   lcd.setCursor(23,0);
