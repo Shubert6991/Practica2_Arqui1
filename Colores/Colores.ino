@@ -372,7 +372,7 @@ void moverMotorIzquierda(){//Recipiente 1
   //Serial.println("Mover motor al recipiente 1");
   servo.write(45);
   //if(currentTime - previousTime > 500){
-  delay(2000);
+  delay(2500);
     servo.write(0);
     //previousTime = currentTime;
   //}  
